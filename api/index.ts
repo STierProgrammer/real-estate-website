@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
+import userRouter from './routes/user.route';
 
 dotenv.config();
 
@@ -24,3 +25,5 @@ app.use(express.json());
 app.listen(5018, () => {
     console.log("Server is running on port 5018!");
 });
+
+app.use('/api/user', userRouter);
