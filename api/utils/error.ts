@@ -13,5 +13,6 @@ class CustomError extends Error {
   
   export const errorHandler = (statusCode: number, message: string): CustomError => {
     return new CustomError(statusCode, message);
-  };
-  
+};
+
+export default CustomError;
