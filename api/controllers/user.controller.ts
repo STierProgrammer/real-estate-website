@@ -56,10 +56,10 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     }
 };
 
-export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void>  => {
     if (typeof req.user === 'string' || !('id' in req.user)) return next(errorHandler(401, 'Unauthorized account'));
 
-    if (req.user.id !== req.params.id) return errorHandler(401, 'You can only delete your own account!');
+    if (req.user.id !== req.params.id) return next(errorHandler(401, 'You can only delete your own account!'));
     
     try {
         await User.findByIdAndDelete(req.params.id);
