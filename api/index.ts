@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.route';
 import authRouter from './routes/auth.route';
 
@@ -22,6 +23,7 @@ mongoose.connect(mongoUri)
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.listen(5018, () => {
     console.log("Server is running on port 5018!");
