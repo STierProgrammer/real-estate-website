@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express';
 declare global {
     namespace Express {
         interface Request {
-            user?: JwtPayload | string;
+            user: JwtPayload & { id: string } | string;
         }
     }
 }
@@ -15,7 +15,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
     const jwt_secret = process.env.JWT_SECRET;
 
     if (!token) return next(errorHandler(401, 'Unauthorized Account'));
-    
+
     if (!jwt_secret) throw new Error("JWT_SECRET Environmental variable is not defined!");
 
     jwt.verify(
@@ -23,11 +23,12 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
         jwt_secret,
         (err: VerifyErrors | null, decoded: string | JwtPayload | undefined) => {
             if (err) return next(errorHandler(403, 'Forbidden'));
-            
-            if (decoded) req.user = decoded;
+
+            if (decoded && typeof decoded === 'object' && 'id' in decoded) req.user = decoded as JwtPayload & { id: string };
+
+            else return next(errorHandler(403, 'Forbidden: Invalid token structure'));
 
             next();
         }
     );
 };
-
